@@ -195,7 +195,7 @@ esp_err_t rmt_uart_write(uint8_t uart_num, const uint8_t* data, size_t size)
 
     // Transmit (blocking)
     rmt_channel_handle_t tx_channel = ctx->uart_context_tx.channel;
-    rmt_symbol_word_t *symbols = rtc->symbols;
+    rmt_symbol_word_t* symbols = rtc->symbols;
 
     rmt_transmit_config_t rmt_transmit_config = {
       .loop_count = 1,
