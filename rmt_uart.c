@@ -204,7 +204,7 @@ esp_err_t rmt_uart_write(uint8_t uart_num, const uint8_t* data, size_t size)
       }
     };
 
-    ESP_ERROR_CHECK(rmt_transmit(tx_channel, copy_encoder, symbols, sizeof(rmt_symbol_word_t), &rmt_transmit_config));
+    ESP_ERROR_CHECK(rmt_transmit(tx_channel, copy_encoder, symbols, rtc->item_index*sizeof(rmt_symbol_word_t), &rmt_transmit_config));
 
     // Optional: Wait for completion
     ESP_ERROR_CHECK(rmt_tx_wait_all_done(tx_channel, portMAX_DELAY));
