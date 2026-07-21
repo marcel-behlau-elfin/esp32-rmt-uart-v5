@@ -52,8 +52,8 @@ static int convert_byte_to_symbols(rmt_uart_context_t* ctx, uint16_t byte)
         rmt_symbol_word_t* symbol = &rtc->symbols[rtc->item_index];
         symbol->duration0 = ctx->bit_ticks;
         symbol->duration1 = ctx->bit_ticks;
-        symbol->level0 = (data >> i) ^ 1;
-        symbol->level1 = (data >> (i + 1)) ^ 1;
+        symbol->level0 = (data >> i);
+        symbol->level1 = (data >> (i + 1));
         rtc->item_index++;
         if (rtc->item_index >= ctx->uart_config.buffer_size / sizeof(rmt_symbol_word_t)) {
             ESP_LOGE(TAG, "DATA TOO LONG - increase tx_items_buffer_size");
