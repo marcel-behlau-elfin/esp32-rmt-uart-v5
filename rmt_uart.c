@@ -153,7 +153,12 @@ esp_err_t rmt_uart_init(uint8_t uart_num, const rmt_uart_config_t* uart_config)
             .clk_src = RMT_CLK_SRC_XTAL,  // 40 MHz
             .resolution_hz = RMT_RES_HZ,
             .mem_block_symbols = (uart_config->mode == RMT_UART_MODE_RX_ONLY) ? SOC_RMT_MEM_WORDS_PER_CHANNEL : (SOC_RMT_MEM_WORDS_PER_CHANNEL << 1),
+            .trans_queue_depth = 4,
             .intr_priority = 0,
+            .flags = {
+              .invert_out = false,
+              .io_loop_back = false
+            }
         };
 
         ESP_ERROR_CHECK(rmt_new_tx_channel(&tx_chan_cfg, &tx_channel));
@@ -191,7 +196,15 @@ esp_err_t rmt_uart_write(uint8_t uart_num, const uint8_t* data, size_t size)
     // Transmit (blocking)
     rmt_channel_handle_t tx_channel = ctx->uart_context_tx.channel;
     rmt_symbol_word_t *symbols = rtc->symbols;
-    ESP_ERROR_CHECK(rmt_transmit(tx_channel, copy_encoder, symbols, sizeof(rmt_symbol_word_t), NULL));
+
+    rmt_transmit_config_t rmt_transmit_config = {
+      .loop_count = 1,
+      .flags = {
+        .eot_level = 1,
+      }
+    };
+
+    ESP_ERROR_CHECK(rmt_transmit(tx_channel, copy_encoder, symbols, sizeof(rmt_symbol_word_t), &rmt_transmit_config));
 
     // Optional: Wait for completion
     ESP_ERROR_CHECK(rmt_tx_wait_all_done(tx_channel, portMAX_DELAY));
