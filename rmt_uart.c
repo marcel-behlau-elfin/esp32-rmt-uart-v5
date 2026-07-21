@@ -40,7 +40,7 @@ typedef struct {
 
 static rmt_uart_context_t rmt_uart_contexts[RMT_UART_NUM_MAX] = {0};
 
-static int convert_byte_to_symbols(rmt_uart_context_t* ctx, uint8_t byte)
+static int convert_byte_to_symbols(rmt_uart_context_t* ctx, uint16_t byte)
 {
     rmt_uart_context_tx_t* rtc = &ctx->uart_context_tx;
     size_t total_bits = ctx->uart_config.data_bits == RMT_UART_DATA_8_BITS ? 9 : 11;
