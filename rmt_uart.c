@@ -52,8 +52,8 @@ static int convert_byte_to_symbols(rmt_uart_context_t* ctx, uint16_t byte)
         rmt_symbol_word_t* symbol = &rtc->symbols[rtc->item_index];
         symbol->duration0 = ctx->bit_ticks;
         symbol->duration1 = ctx->bit_ticks;
-        symbol->level0 = (data >> i);
-        symbol->level1 = (data >> (i + 1));
+        symbol->level0 = (data >> i) ^ 1;
+        symbol->level1 = (data >> (i + 1)) ^ 1;
         rtc->item_index++;
         if (rtc->item_index >= ctx->uart_config.buffer_size / sizeof(rmt_symbol_word_t)) {
             ESP_LOGE(TAG, "DATA TOO LONG - increase tx_items_buffer_size");
@@ -156,7 +156,7 @@ esp_err_t rmt_uart_init(uint8_t uart_num, const rmt_uart_config_t* uart_config)
             .trans_queue_depth = 4,
             .intr_priority = 0,
             .flags = {
-              .invert_out = false,
+              .invert_out = true,
               .io_loop_back = false
             }
         };
@@ -201,7 +201,7 @@ esp_err_t rmt_uart_write(uint8_t uart_num, const uint8_t* data, size_t size)
     rmt_transmit_config_t rmt_transmit_config = {
       .loop_count = 1,
       .flags = {
-        .eot_level = 1,
+        .eot_level = 0,
       }
     };
 
