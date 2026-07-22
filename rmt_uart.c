@@ -182,6 +182,7 @@ esp_err_t rmt_uart_init(uint8_t uart_num, const rmt_uart_config_t* uart_config)
 
 esp_err_t rmt_uart_write(uint8_t uart_num, const uint8_t* data, size_t size)
 {
+    if (!size) return 0;
     rmt_uart_context_t* ctx = &rmt_uart_contexts[uart_num];
     ESP_RETURN_ON_FALSE((ctx->configured), ESP_FAIL, TAG, "uart not configured");
     ESP_RETURN_ON_FALSE((ctx->uart_config.mode != RMT_UART_MODE_RX_ONLY), ESP_FAIL, TAG, "uart RX only");
